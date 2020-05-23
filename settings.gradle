@@ -1,0 +1,3 @@
+rootProject.name='ARouterHelper'
+include ':app'
+include ':library'
