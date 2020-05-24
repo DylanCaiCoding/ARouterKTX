@@ -9,7 +9,7 @@ import com.alibaba.android.arouter.facade.template.IInterceptor
 /**
  * @author Dylan Cai
  */
-@Interceptor(priority = 1000)
+@Interceptor(priority = 9999)
 class LoginInterceptor : IInterceptor {
 
   override fun process(postcard: Postcard, callback: InterceptorCallback) {

@@ -7,7 +7,7 @@ import com.alibaba.android.arouter.facade.callback.NavCallback
 /**
  * @author Dylan Cai
  */
-class LoginNavCallback(
+internal class LoginNavCallback(
   private val context: Context,
   private var onArrival: ((postcard: Postcard) -> Unit)? = null
 ) : NavCallback() {
@@ -17,13 +17,14 @@ class LoginNavCallback(
       return
     }
     loginActivityPath?.let {
-      context.startRouterActivity(it, { postcard ->
-        onArrival?.invoke(postcard)
-        onArrival = null
-      }) {
-        with(postcard.extras)
-        withString(KEY_ROUTER_PATH, postcard.path)
-      }
+      context.startRouterActivity(
+        it,
+        KEY_ROUTER_PATH to postcard.path,
+        bundle = postcard.extras,
+        onArrival = { postcard ->
+          onArrival?.invoke(postcard)
+          onArrival = null
+        })
     }
   }
 

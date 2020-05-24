@@ -18,7 +18,7 @@ fun handleLogin(activity: Activity) {
   val intent = activity.intent
   val path = intent.getStringExtra(KEY_ROUTER_PATH)
   if (path != null) {
-    activity.startRouterActivityAndFinish(path) { with(intent.extras) }
+    activity.startRouterActivityAndFinish(path, bundle = intent.extras)
   } else {
     activity.finish()
   }

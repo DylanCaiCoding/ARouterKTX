@@ -5,12 +5,12 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.novoda.bintray-release'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion rootProject.compile_sdk_version
+    buildToolsVersion rootProject.build_tools_version
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion rootProject.target_sdk_version
         versionCode 1
         versionName "1.0"
 
@@ -24,13 +24,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
-    compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
-    }
 }
-
 
 kapt {
     arguments {
@@ -41,7 +35,7 @@ kapt {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "androidx.appcompat:appcompat:$app_compat_version"
     api "com.alibaba:arouter-api:$arouter_api_version"
     kapt "com.alibaba:arouter-compiler:$arouter_compiler_version"
 }
@@ -53,5 +47,5 @@ publish {
     artifactId = 'arouter-helper'
     publishVersion = '1.0.0-alpha'
     desc = 'A helper for ARouter'
-    website = 'https://github.com/DylanCaiCoding/ARouterKTX'
+    website = 'https://github.com/DylanCaiCoding/ARouterHelper'
 }
