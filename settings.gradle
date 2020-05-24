@@ -1,3 +1,6 @@
 rootProject.name='ARouterHelper'
-include ':app'
+include ':sample'
 include ':library'
+include ':sample-common'
+include ':sample-core'
+include ':sample-user'
