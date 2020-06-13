@@ -19,7 +19,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -41,6 +41,7 @@ dependencies {
     implementation project(path: ':sample-core')
     runtimeOnly project(path: ':sample-user')
     kapt "com.alibaba:arouter-compiler:$arouter_compiler_version"
+    kapt "com.dylanc:retrofit-helper-compiler:$retrofit_helper_version"
 
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test:runner:$runner_version"
