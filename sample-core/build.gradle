@@ -30,7 +30,11 @@ dependencies {
     api project(path: ':sample-common')
     api "androidx.core:core-ktx:$core_ktx_version"
     api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
+    api "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     api "com.dylanc:utilktx:$util_ktx_version"
     api "com.dylanc:retrofit-helper:$retrofit_helper_version"
+    api "com.dylanc:loadinghelper:$loading_helper_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     api "com.dylanc:retrofit-helper-rxjava:$retrofit_helper_version"
 }

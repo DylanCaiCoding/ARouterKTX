@@ -3,6 +3,7 @@ package com.dylanc.arouter.helper.sample.user.api
 import com.dylanc.arouter.helper.sample.core.bean.ApiResponse
 import com.dylanc.arouter.helper.sample.user.bean.User
 import io.reactivex.Single
+import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST

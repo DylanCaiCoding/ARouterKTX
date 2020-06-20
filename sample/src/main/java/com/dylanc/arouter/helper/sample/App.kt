@@ -1,13 +1,13 @@
 package com.dylanc.arouter.helper.sample
 
 import android.app.Application
+import com.blankj.utilcode.util.LogUtils
 import com.dylanc.arouter.helper.enableLoginInterceptor
 import com.dylanc.arouter.helper.initARouter
 import com.dylanc.arouter.helper.routerServiceOf
 import com.dylanc.arouter.helper.sample.common.PATH_LOGIN
 import com.dylanc.arouter.helper.sample.common.PATH_MAIN
 import com.dylanc.arouter.helper.sample.common.service.UserService
-import com.dylanc.arouter.helper.sample.constant.BASE_URL
 import com.dylanc.retrofit.helper.initRetrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
@@ -27,7 +27,7 @@ class App : Application() {
     }
 
     initRetrofit {
-      baseUrl(BASE_URL)
+      debug(BuildConfig.DEBUG)
       addCallAdapterFactory(RxJava2CallAdapterFactory.create())
     }
   }
