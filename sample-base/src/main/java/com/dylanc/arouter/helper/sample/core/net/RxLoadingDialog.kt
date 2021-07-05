@@ -20,12 +20,12 @@ class RxLoadingDialog(private val manager: FragmentManager) : RequestLoading {
 
   private val loadingDialog = LoadingDialog()
 
-  override fun show() {
-    loadingDialog.show(manager, TAG_LOADING)
-  }
-
-  override fun dismiss() {
-    loadingDialog.dismiss()
+  override fun show(isLoading: Boolean) {
+    if (isLoading){
+      loadingDialog.show(manager, TAG_LOADING)
+    }else{
+      loadingDialog.dismiss()
+    }
   }
 }
 

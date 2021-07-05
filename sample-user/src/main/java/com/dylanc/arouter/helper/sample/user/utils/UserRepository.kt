@@ -1,20 +1,23 @@
 package com.dylanc.arouter.helper.sample.user.utils
 
 import com.dylanc.arouter.helper.sample.user.bean.User
-import com.dylanc.utilktx.*
+import com.dylanc.longan.SharedPreferencesOwner
+import com.dylanc.longan.sharedPreferences
+import com.google.gson.Gson
 
 /**
  * @author Dylan Cai
  */
-object UserRepository {
-  private const val KEY_USER = "user"
+object UserRepository : SharedPreferencesOwner {
   private var userCache: User? = null
+  private var user: String? by sharedPreferences()
+  private val gson = Gson()
 
   @JvmStatic
   fun getUser(): User? {
     if (userCache == null) {
-      val json = spValueOf(KEY_USER, null)
-      userCache = json?.toInstance()
+      val json = user
+      userCache = gson.fromJson(json, User::class.java)
     }
     return userCache
   }
@@ -22,14 +25,14 @@ object UserRepository {
   @JvmStatic
   fun saveUser(user: User) {
     userCache = user
-    putSP(KEY_USER, user.toJson())
+    this.user = gson.toJson(user)
   }
 
   @JvmStatic
   fun logout() {
     if (isLogin()) {
       userCache = null
-      removeSp(KEY_USER)
+      user = null
     }
   }
 

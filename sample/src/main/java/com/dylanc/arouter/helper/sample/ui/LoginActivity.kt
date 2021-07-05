@@ -8,7 +8,7 @@ import com.dylanc.arouter.helper.handleLogin
 import com.dylanc.arouter.helper.routerServiceOf
 import com.dylanc.arouter.helper.sample.R
 import com.dylanc.arouter.helper.sample.common.service.UserService
-import com.dylanc.utilktx.toast
+import com.dylanc.longan.toast
 import kotlinx.android.synthetic.main.activity_login.*
 
 @Route(path = PATH_LOGIN)

@@ -6,6 +6,7 @@ if (runAsApp.toBoolean()) {
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlinx-serialization'
 
 android {
     compileSdkVersion rootProject.compile_sdk_version
@@ -42,6 +43,14 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 
 kapt {
@@ -52,6 +61,7 @@ kapt {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(path: ':sample-core')
+    implementation project(path: ':sample-base')
+    implementation 'com.google.code.gson:gson:2.8.7'
     kapt "com.alibaba:arouter-compiler:$arouter_compiler_version"
 }

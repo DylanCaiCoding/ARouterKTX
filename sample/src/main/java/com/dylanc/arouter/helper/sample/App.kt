@@ -1,7 +1,6 @@
 package com.dylanc.arouter.helper.sample
 
 import android.app.Application
-import com.blankj.utilcode.util.LogUtils
 import com.dylanc.arouter.helper.enableLoginInterceptor
 import com.dylanc.arouter.helper.initARouter
 import com.dylanc.arouter.helper.routerServiceOf
