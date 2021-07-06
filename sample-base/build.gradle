@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
@@ -40,6 +39,7 @@ dependencies {
     api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
     api "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
+    api 'com.github.DylanCaiCoding.ViewBindingKTX:viewbinding-ktx:1.2.3'
     api 'com.github.DylanCaiCoding.RetrofitHelper:retrofithelper-core:2.0.0-alpha3'
     kapt 'com.github.DylanCaiCoding.RetrofitHelper:retrofithelper-compiler:2.0.0-alpha3'
     api 'com.github.DylanCaiCoding.RetrofitHelper:retrofithelper-rxjava:2.0.0-alpha3'

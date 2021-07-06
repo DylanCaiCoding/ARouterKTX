@@ -1,5 +1,6 @@
 
 buildscript {
+    ext.debugComponents = false
     ext{
         // Sdk and tools
         compile_sdk_version = 29
