@@ -8,6 +8,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.Postcard
 import com.alibaba.android.arouter.facade.callback.NavCallback
@@ -15,20 +16,17 @@ import com.alibaba.android.arouter.facade.callback.NavigationCallback
 import com.alibaba.android.arouter.facade.template.IProvider
 import com.alibaba.android.arouter.launcher.ARouter
 import java.io.Serializable
-import kotlin.reflect.KClass
 
 /**
  * @author Dylan Cai
  */
 internal const val KEY_ROUTER_PATH = "router_path"
-internal const val PATH_OBSERVE_LOGIN_SERVICE = "/arouter/observe_login"
-
-val loginInterceptPaths = mutableSetOf<String>()
+internal const val KEY_NEED_LOGIN = "router_need_login"
 internal var loginActivityPath: String? = null
-internal var isLogin: (() -> Boolean)? = null
+internal var checkLogin: (() -> Boolean)? = null
 
 @JvmName("init")
-fun initARouter(application: Application, isDebug: Boolean) {
+fun initARouter(application: Application, isDebug: Boolean = false) {
   if (isDebug) {
     ARouter.openLog()
     ARouter.openDebug()
@@ -36,16 +34,13 @@ fun initARouter(application: Application, isDebug: Boolean) {
   ARouter.init(application)
 }
 
-fun enableLoginInterceptor(
-  loginActivityPath: String,
-  vararg loginInterceptPaths: String,
-  isLogin: () -> Boolean
+@JvmName("enableLoginInterceptor")
+fun enableRouterLoginInterceptor(
+  loginPath: String,
+  onCheckLogin: () -> Boolean
 ) {
-  com.dylanc.arouter.helper.loginActivityPath = loginActivityPath
-  for (path in loginInterceptPaths) {
-    com.dylanc.arouter.helper.loginInterceptPaths.add(path)
-  }
-  com.dylanc.arouter.helper.isLogin = isLogin
+  loginActivityPath = loginPath
+  checkLogin = onCheckLogin
 }
 
 @JvmName("startActivity")
@@ -54,12 +49,7 @@ fun startRouterActivity(
   vararg postcard: Pair<String, Any>,
   bundle: Bundle? = null
 ) {
-  ARouter.getInstance().build(path)
-    .apply {
-      with(bundle)
-      putExtra(*postcard)
-    }
-    .navigation()
+  ARouter.getInstance().build(path).with(bundle).with(*postcard).navigation()
 }
 
 @JvmOverloads
@@ -67,25 +57,20 @@ fun startRouterActivity(
 fun Context.startRouterActivity(
   path: String,
   vararg postcard: Pair<String, Any>,
-  bundle: Bundle? = null,
+  extras: Bundle? = null,
   callback: NavigationCallback? = null
 ) {
-  ARouter.getInstance().build(path)
-    .apply {
-      with(bundle)
-      putExtra(*postcard)
-    }
-    .navigation(this, callback)
+  ARouter.getInstance().build(path).with(extras).with(*postcard).navigation(this, callback)
 }
 
 @JvmName("startActivity")
 fun Context.startRouterActivity(
   path: String,
   vararg postcard: Pair<String, Any>,
-  bundle: Bundle? = null,
+  extras: Bundle? = null,
   onArrival: (postcard: Postcard) -> Unit
 ) =
-  startRouterActivity(path, *postcard, bundle = bundle, callback = object : NavCallback() {
+  startRouterActivity(path, *postcard, extras = extras, callback = object : NavCallback() {
     override fun onArrival(postcard: Postcard) {
       onArrival.invoke(postcard)
     }
@@ -95,9 +80,9 @@ fun Context.startRouterActivity(
 fun Activity.startRouterActivityAndFinish(
   path: String,
   vararg postcard: Pair<String, Any>,
-  bundle: Bundle? = null
+  extras: Bundle? = null
 ) =
-  startRouterActivity(path, *postcard, bundle = bundle, onArrival = { finish() })
+  startRouterActivity(path, *postcard, extras = extras, onArrival = { finish() })
 
 @JvmOverloads
 @JvmName("startActivityForResult")
@@ -108,12 +93,7 @@ fun Activity.startRouterActivityForResult(
   bundle: Bundle? = null,
   callback: NavigationCallback? = null
 ) {
-  ARouter.getInstance().build(path)
-    .apply {
-      with(bundle)
-      putExtra(*postcard)
-    }
-    .navigation(this, requestCode, callback)
+  ARouter.getInstance().build(path).with(bundle).with(*postcard).navigation(this, requestCode, callback)
 }
 
 @JvmName("startActivityForResult")
@@ -124,16 +104,11 @@ fun Activity.startRouterActivityForResult(
   bundle: Bundle? = null,
   onArrival: (postcard: Postcard) -> Unit
 ) {
-  ARouter.getInstance().build(path)
-    .apply {
-      with(bundle)
-      putExtra(*postcard)
+  ARouter.getInstance().build(path).with(bundle).with(*postcard).navigation(this, requestCode, object : NavCallback() {
+    override fun onArrival(postcard: Postcard) {
+      onArrival.invoke(postcard)
     }
-    .navigation(this, requestCode, object : NavCallback() {
-      override fun onArrival(postcard: Postcard) {
-        onArrival.invoke(postcard)
-      }
-    })
+  })
 }
 
 @JvmName("startActivityForResultAndFinish")
@@ -141,112 +116,113 @@ fun Activity.startRouterActivityForResultAndFinish(
   path: String,
   requestCode: Int,
   vararg postcard: Pair<String, Any>,
-  bundle: Bundle? = null
+  extras: Bundle? = null
 ) =
-  startRouterActivityForResult(path, requestCode, *postcard, bundle = bundle) { finish() }
+  startRouterActivityForResult(path, requestCode, *postcard, bundle = extras) { finish() }
 
 @JvmOverloads
-@JvmName("startActivityCheckLogin")
-fun Context.startRouterActivityCheckLogin(
+@JvmName("startActivityNeedSignIn")
+fun Context.startRouterActivityNeedLogin(
   path: String,
   vararg postcard: Pair<String, Any>,
-  bundle: Bundle? = null,
+  extras: Bundle = Bundle(),
   onArrival: ((postcard: Postcard) -> Unit)? = null
-) =
-  startRouterActivity(
-    path,
-    *postcard,
-    bundle = bundle,
-    callback = LoginNavCallback(this, onArrival)
-  )
+) {
+  extras.putBoolean(KEY_NEED_LOGIN, true)
+  startRouterActivity(path, *postcard, extras = extras, callback = LoginNavCallback(this, onArrival))
+}
 
-fun executeAfterLogin(observer: () -> Unit) =
-  if (isLogin != null) {
-    executeAfterLogin(observer, { startRouterActivity(loginActivityPath!!) })
-  } else {
-    observer.invoke()
-  }
-
-fun executeAfterLogin(observer: () -> Unit, startLoginActivity: () -> Unit) =
-  if (isLogin != null && !isLogin!!()) {
-    startLoginActivity()
-    observeLogin(observer)
+fun executeNeedLogin(observer: () -> Unit) =
+  if (checkLogin?.invoke() == false && loginActivityPath != null) {
+    startRouterActivity(loginActivityPath!!)
+    loginObserver = observer
   } else {
     observer.invoke()
   }
 
 @JvmOverloads
-@JvmName("getFragment")
-fun routerFragmentOf(
-  path: String, vararg postcard: Pair<String, Any>,
-  bundle: Bundle? = null
-): Fragment =
-  ARouter.getInstance().build(path).apply {
-    with(bundle)
-    putExtra(*postcard)
-  }.navigation() as Fragment
+fun findRouterFragment(path: String, vararg postcard: Pair<String, Any>, bundle: Bundle? = null): Fragment =
+  ARouter.getInstance().build(path).with(bundle).with(*postcard).navigation() as Fragment
 
-@JvmName("getService")
-fun <T : IProvider> routerServiceOf(clazz: Class<T>): T =
+fun <T : IProvider> findRouterService(clazz: Class<T>): T =
   ARouter.getInstance().navigation(clazz)
 
-inline fun <reified T : IProvider> routerServiceOf(): T =
-  routerServiceOf(T::class.java)
+inline fun <reified T : IProvider> routerServices() =
+  lazy { findRouterService(T::class.java) }
 
-@JvmName("putPostcardExtra")
-fun Postcard.putExtra(vararg postcard: Pair<String, Any>) {
-  postcard.forEach { pair ->
-    val key = pair.first
-    when (val value = pair.second) {
-      is Int -> withInt(key, value)
+private fun Postcard.with(vararg pairs: Pair<String, Any?>) = apply {
+  for ((key, value) in pairs) {
+    when (value) {
+      null -> withString(key, null)
+
+      is Boolean -> withBoolean(key, value)
       is Byte -> withByte(key, value)
       is Char -> withChar(key, value)
-      is Short -> withShort(key, value)
-      is Boolean -> withBoolean(key, value)
-      is Long -> withLong(key, value)
-      is Float -> withFloat(key, value)
       is Double -> withDouble(key, value)
-      is String -> withString(key, value)
+      is Float -> withFloat(key, value)
+      is Int -> withInt(key, value)
+      is Long -> withLong(key, value)
+      is Short -> withShort(key, value)
+
+      is Bundle -> withBundle(key, value)
       is CharSequence -> withCharSequence(key, value)
       is Parcelable -> withParcelable(key, value)
-      is Serializable -> withSerializable(key, value)
+
       is ByteArray -> withByteArray(key, value)
-      is ShortArray -> withShortArray(key, value)
       is CharArray -> withCharArray(key, value)
       is FloatArray -> withFloatArray(key, value)
-      is Bundle -> withBundle(key, value)
-      is List<*> -> withList(key, value)
+
+
+      is ShortArray -> withShortArray(key, value)
+
+      is Array<*> -> {
+        val componentType = value::class.java.componentType!!
+        @Suppress("UNCHECKED_CAST")
+        when {
+          Parcelable::class.java.isAssignableFrom(componentType) -> {
+            withParcelableArray(key, value as Array<Parcelable>)
+          }
+          else -> {
+            val valueType = componentType.canonicalName
+            throw IllegalArgumentException(
+              "Illegal value array type $valueType for key \"$key\""
+            )
+          }
+        }
+      }
+
+      is List<*> -> {
+        val componentType = value::class.java.componentType!!
+        when {
+          Int::class.java.isAssignableFrom(componentType) -> {
+            withIntegerArrayList(key, value.toArrayList())
+          }
+          String::class.java.isAssignableFrom(componentType) -> {
+            withStringArrayList(key, value.toArrayList())
+          }
+          CharSequence::class.java.isAssignableFrom(componentType) -> {
+            withCharSequenceArrayList(key, value.toArrayList())
+          }
+          Parcelable::class.java.isAssignableFrom(componentType) -> {
+            withParcelableArrayList(key, value.toArrayList())
+          }
+          else -> {
+            val valueType = value.javaClass.canonicalName
+            throw IllegalArgumentException("Illegal value list type $valueType for key \"$key\"")
+          }
+        }
+      }
+
+      is Serializable -> withSerializable(key, value)
+
       else -> {
+        val valueType = value.javaClass.canonicalName
+        throw IllegalArgumentException("Illegal value type $valueType for key \"$key\"")
       }
     }
   }
 }
 
-private fun Postcard.withList(key: String, value: List<*>) {
-  if (value.isNotEmpty()) {
-    when (value[0]) {
-      is Int -> {
-        withIntegerArrayList(key, arrayListOf<Int>().apply {
-          value.forEach { add(it as Int) }
-        })
-      }
-      is String -> {
-        withStringArrayList(key, arrayListOf<String>().apply {
-          value.forEach { add(it as String) }
-        })
-      }
-      is CharSequence -> {
-        withCharSequenceArrayList(key, arrayListOf<CharSequence>().apply {
-          value.forEach { add(it as CharSequence) }
-        })
-      }
-      is Parcelable -> {
-        withParcelableArrayList(key, arrayListOf<Parcelable>().apply {
-          value.forEach { add(it as Parcelable) }
-        })
-      }
-      else -> {
-      }
-    }
-  }
-}
+@Suppress("UNCHECKED_CAST")
+private fun <T> List<*>.toArrayList() =
+  ArrayList<T>().also { arrayList -> forEach { arrayList.add(it as T) } }

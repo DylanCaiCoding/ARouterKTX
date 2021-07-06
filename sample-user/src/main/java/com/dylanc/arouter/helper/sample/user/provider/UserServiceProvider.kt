@@ -13,6 +13,7 @@ import com.dylanc.arouter.helper.sample.user.utils.UserRepository
 import com.dylanc.longan.finishAllActivities
 import com.dylanc.retrofit.helper.apiServiceOf
 import com.dylanc.retrofit.helper.rxjava.io2mainThread
+
 /**
  * @author Dylan Cai
  * @since 2020/5/24

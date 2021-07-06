@@ -1,10 +1,9 @@
-if (runAsApp.toBoolean()) {
+if (debugComponents) {
     apply plugin: 'com.android.application'
 } else {
     apply plugin: 'com.android.library'
 }
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlinx-serialization'
 
@@ -14,7 +13,7 @@ android {
 //    resourcePrefix "user_"
 
     defaultConfig {
-        if (runAsApp.toBoolean()) {
+        if (debugComponents) {
             applicationId "com.dylanc.arouter.helper.sample.user"
         }
         minSdkVersion rootProject.min_sdk_version
@@ -27,7 +26,7 @@ android {
 
     sourceSets {
         main {
-            if (runAsApp.toBoolean()) {
+            if (debugComponents) {
                 manifest.srcFile 'src/main/AndroidManifest.xml'
             } else {
                 manifest.srcFile 'src/main/manifest/AndroidManifest.xml'
@@ -37,7 +36,7 @@ android {
 
     buildTypes {
         release {
-//            minifyEnabled true
+            minifyEnabled true
             consumerProguardFiles   'proguard-rules.pro'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -51,6 +50,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 kapt {
@@ -63,5 +66,9 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':sample-base')
     implementation 'com.google.code.gson:gson:2.8.7'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     kapt "com.alibaba:arouter-compiler:$arouter_compiler_version"
 }

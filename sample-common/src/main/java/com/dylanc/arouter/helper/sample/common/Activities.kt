@@ -1,18 +1,21 @@
 package com.dylanc.arouter.helper.sample.common
 
 import android.app.Activity
-import android.content.Context
 import com.alibaba.android.arouter.facade.Postcard
-import com.dylanc.arouter.helper.startRouterActivityCheckLogin
+import com.dylanc.arouter.helper.startRouterActivityNeedLogin
 
 /**
  * @author Dylan Cai
  */
 private const val GROUP_SAMPLE = "/sample"
-const val PATH_LOGIN = "$GROUP_SAMPLE/login"
 const val PATH_MAIN = "$GROUP_SAMPLE/main"
 
-fun Activity.startMainActivity(
-  onArrival: (postcard: Postcard) -> Unit = { finish() }
-) =
-  startRouterActivityCheckLogin(PATH_MAIN, onArrival = onArrival)
+private const val GROUP_USER = "/user"
+const val PATH_LOGIN = "$GROUP_USER/login"
+const val PATH_USER_INFO = "$GROUP_USER/userinfo"
+
+private const val GROUP_PAYMENT = "/payment"
+const val PATH_PAYMENT = "$GROUP_PAYMENT/payment"
+
+fun Activity.startMainActivity(onArrival: (postcard: Postcard) -> Unit = { finish() }) =
+  startRouterActivityNeedLogin(PATH_MAIN, onArrival = onArrival)

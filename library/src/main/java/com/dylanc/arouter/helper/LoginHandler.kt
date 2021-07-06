@@ -7,20 +7,15 @@ import android.app.Activity
 /**
  * @author Dylan Cai
  */
-private var loginObserver: (() -> Unit)? = null
-
-internal fun observeLogin(observer: (() -> Unit)?) {
-  loginObserver = observer
-}
+internal var loginObserver: (() -> Unit)? = null
 
 @JvmName("post")
-fun handleLogin(activity: Activity) {
-  val intent = activity.intent
+fun Activity.loginSuccess() {
   val path = intent.getStringExtra(KEY_ROUTER_PATH)
   if (path != null) {
-    activity.startRouterActivityAndFinish(path, bundle = intent.extras)
+    startRouterActivityAndFinish(path, extras = intent.extras)
   } else {
-    activity.finish()
+    finish()
   }
   loginObserver?.invoke()
   loginObserver = null

@@ -9,17 +9,14 @@ import com.alibaba.android.arouter.facade.template.IInterceptor
 /**
  * @author Dylan Cai
  */
-@Interceptor(priority = 9999)
+@Interceptor(priority = 65535)
 class LoginInterceptor : IInterceptor {
 
   override fun process(postcard: Postcard, callback: InterceptorCallback) {
-    isLogin?.let {
-      if (!it.invoke()) {
-        if (loginInterceptPaths.contains(postcard.path)) {
-          callback.onInterrupt(null)
-          return
-        }
-      }
+    val needLogin = postcard.extras.getBoolean(KEY_NEED_LOGIN)
+    if (needLogin && postcard.path != loginActivityPath && checkLogin?.invoke() == false) {
+      callback.onInterrupt(null)
+      return
     }
     callback.onContinue(postcard)
   }

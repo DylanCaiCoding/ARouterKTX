@@ -1,3 +1,5 @@
 <resources>
   <string name="app_name">ARouterHelper</string>
+  <string name="login">Login</string>
+  <string name="logout">Logout</string>
 </resources>

@@ -1,11 +1,10 @@
 package com.dylanc.arouter.helper.sample
 
 import android.app.Application
-import com.dylanc.arouter.helper.enableLoginInterceptor
+import com.dylanc.arouter.helper.enableRouterLoginInterceptor
 import com.dylanc.arouter.helper.initARouter
-import com.dylanc.arouter.helper.routerServiceOf
+import com.dylanc.arouter.helper.routerServices
 import com.dylanc.arouter.helper.sample.common.PATH_LOGIN
-import com.dylanc.arouter.helper.sample.common.PATH_MAIN
 import com.dylanc.arouter.helper.sample.common.service.UserService
 import com.dylanc.retrofit.helper.initRetrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -17,13 +16,12 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 @Suppress("unused")
 class App : Application() {
 
+  private val userService: UserService by routerServices()
+
   override fun onCreate() {
     super.onCreate()
-
     initARouter(this, BuildConfig.DEBUG)
-    enableLoginInterceptor(PATH_LOGIN, PATH_MAIN) {
-      routerServiceOf<UserService>().isLogin()
-    }
+    enableRouterLoginInterceptor(PATH_LOGIN) { userService.isLogin() }
 
     initRetrofit {
       debug(BuildConfig.DEBUG)

@@ -13,19 +13,15 @@ internal class LoginNavCallback(
 ) : NavCallback() {
 
   override fun onInterrupt(postcard: Postcard) {
-    if (isLogin == null || !loginInterceptPaths.contains(postcard.path)) {
-      return
-    }
-    loginActivityPath?.let {
-      context.startRouterActivity(
-        it,
-        KEY_ROUTER_PATH to postcard.path,
-        bundle = postcard.extras,
-        onArrival = { postcard ->
-          onArrival?.invoke(postcard)
-          onArrival = null
-        })
-    }
+    if (checkLogin == null) return
+    context.startRouterActivity(
+      loginActivityPath!!,
+      KEY_ROUTER_PATH to postcard.path,
+      extras = postcard.extras,
+      onArrival = { postcard ->
+        onArrival?.invoke(postcard)
+        onArrival = null
+      })
   }
 
   override fun onArrival(postcard: Postcard) {

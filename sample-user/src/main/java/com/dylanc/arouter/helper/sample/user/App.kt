@@ -8,9 +8,9 @@ import com.dylanc.arouter.helper.initARouter
  * @since 2020/5/24
  */
 @Suppress("unused")
-class App: Application() {
+class App : Application() {
   override fun onCreate() {
     super.onCreate()
-    initARouter(this,BuildConfig.DEBUG)
+    initARouter(this, BuildConfig.DEBUG)
   }
 }
