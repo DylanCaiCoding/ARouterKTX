@@ -1,5 +1,5 @@
-rootProject.name='ARouterHelper'
-include ':sample'
+rootProject.name='ARouterKTX'
+include ':sample-app'
 include ':library'
 include ':sample-common'
 include ':sample-base'
