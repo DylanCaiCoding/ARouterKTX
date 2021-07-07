@@ -10,7 +10,7 @@ android {
     compileSdkVersion 30
     defaultConfig {
         if (debugComponents) {
-            applicationId "com.dylanc.arouter.helper.sample.payment"
+            applicationId "com.dylanc.arouter.sample.payment"
         }
         minSdkVersion 21
         targetSdkVersion 30

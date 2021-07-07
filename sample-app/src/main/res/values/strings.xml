@@ -1,0 +1,5 @@
+<resources>
+  <string name="app_name">ARouterKTX</string>
+  <string name="login">Login</string>
+  <string name="logout">Logout</string>
+</resources>

@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.dylanc.arouter.helper.sample.core" />
+<manifest package="com.dylanc.arouter.sample.base" />
