@@ -34,7 +34,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api "androidx.appcompat:appcompat:$app_compat_version"
-//    api 'com.dylanc:arouter-helper:1.0.0-alpha'
+    api project(path: ':sample-base')
     api project(path: ':library')
 }

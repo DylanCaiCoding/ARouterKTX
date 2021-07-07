@@ -7,6 +7,7 @@ import com.dylanc.arouter.helper.executeNeedLogin
 import com.dylanc.arouter.helper.routerServices
 import com.dylanc.arouter.helper.sample.R
 import com.dylanc.arouter.helper.sample.common.PATH_MAIN
+import com.dylanc.arouter.helper.sample.common.PATH_PAYMENT
 import com.dylanc.arouter.helper.sample.common.PATH_USER_INFO
 import com.dylanc.arouter.helper.sample.common.service.UserService
 import com.dylanc.arouter.helper.sample.databinding.ActivityMainBinding
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
       }
 
       btnPay.setOnClickListener {
-
+        startRouterActivity(PATH_PAYMENT)
       }
     }
   }

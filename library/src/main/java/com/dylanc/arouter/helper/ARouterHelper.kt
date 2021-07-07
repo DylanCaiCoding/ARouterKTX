@@ -8,7 +8,6 @@ import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.Postcard
 import com.alibaba.android.arouter.facade.callback.NavCallback
@@ -35,20 +34,13 @@ fun initARouter(application: Application, isDebug: Boolean = false) {
 }
 
 @JvmName("enableLoginInterceptor")
-fun enableRouterLoginInterceptor(
-  loginPath: String,
-  onCheckLogin: () -> Boolean
-) {
+fun enableRouterLoginInterceptor(loginPath: String, onCheckLogin: () -> Boolean) {
   loginActivityPath = loginPath
   checkLogin = onCheckLogin
 }
 
 @JvmName("startActivity")
-fun startRouterActivity(
-  path: String,
-  vararg postcard: Pair<String, Any>,
-  bundle: Bundle? = null
-) {
+fun startRouterActivity(path: String, vararg postcard: Pair<String, Any>, bundle: Bundle? = null) {
   ARouter.getInstance().build(path).with(bundle).with(*postcard).navigation()
 }
 
@@ -77,11 +69,7 @@ fun Context.startRouterActivity(
   })
 
 @JvmName("startActivityAndFinish")
-fun Activity.startRouterActivityAndFinish(
-  path: String,
-  vararg postcard: Pair<String, Any>,
-  extras: Bundle? = null
-) =
+fun Activity.startRouterActivityAndFinish(path: String, vararg postcard: Pair<String, Any>, extras: Bundle? = null) =
   startRouterActivity(path, *postcard, extras = extras, onArrival = { finish() })
 
 @JvmOverloads
@@ -121,7 +109,7 @@ fun Activity.startRouterActivityForResultAndFinish(
   startRouterActivityForResult(path, requestCode, *postcard, bundle = extras) { finish() }
 
 @JvmOverloads
-@JvmName("startActivityNeedSignIn")
+@JvmName("startActivityNeedLogin")
 fun Context.startRouterActivityNeedLogin(
   path: String,
   vararg postcard: Pair<String, Any>,

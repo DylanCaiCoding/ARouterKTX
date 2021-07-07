@@ -44,8 +44,9 @@ kapt {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(path: ':sample-base')
+    implementation project(path: ':sample-common')
     runtimeOnly project(path: ':sample-user')
+    runtimeOnly project(path: ':sample-payment')
     kapt "com.alibaba:arouter-compiler:$arouter_compiler_version"
     kapt 'com.github.DylanCaiCoding.RetrofitHelper:retrofithelper-compiler:2.0.0-alpha3'
 

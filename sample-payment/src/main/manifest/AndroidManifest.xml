@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.dylanc.arouter.helper.sample.payment">
   <application>
+    <activity android:name=".PayActivity"/>
   </application>
 
 </manifest>

@@ -11,11 +11,11 @@ import com.dylanc.longan.toast
 @Route(path = "/payment/service")
 class PaymentServiceProvider : PaymentService {
   override fun aliPay(money: Float) {
-    toast("Pay ¥$money")
+    toast("Ali Pay ¥$money")
   }
 
   override fun wechatPay(money: Float) {
-    toast("Pay ¥$money")
+    toast("Wechat Pay ¥$money")
   }
 
   override fun init(context: Context) {
