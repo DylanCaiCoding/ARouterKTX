@@ -34,6 +34,16 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    flavorDimensions "userUI", "paymentUI"
+    productFlavors {
+        paymentUI {
+            dimension "paymentUI"
+        }
+        userUI2 {
+            dimension "userUI"
+        }
+    }
 }
 
 kapt {
