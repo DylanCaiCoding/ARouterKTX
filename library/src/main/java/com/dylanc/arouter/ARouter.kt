@@ -34,8 +34,15 @@ fun Application.initARouter(isDebug: Boolean = false) {
 fun <T : IProvider> findRouterService(clazz: Class<T>): T =
   ARouter.getInstance().navigation(clazz)
 
+@Suppress("UNCHECKED_CAST")
+fun <T : IProvider> findRouterService(path: String): T =
+  ARouter.getInstance().build(path).navigation() as T
+
 inline fun <reified T : IProvider> routerServices() =
   lazy { findRouterService(T::class.java) }
+
+inline fun <reified T : IProvider> routerServices(path: String) =
+  lazy { findRouterService<T>(path) }
 
 @JvmOverloads
 fun findRouterFragment(path: String, vararg postcard: Pair<String, Any>, bundle: Bundle? = null): Fragment =
@@ -73,20 +80,16 @@ fun Context.startRouterActivity(
     }
   })
 
-@JvmName("startActivityAndFinish")
-fun Activity.startRouterActivityAndFinish(path: String, vararg postcard: Pair<String, Any>, extras: Bundle? = null) =
-  startRouterActivity(path, *postcard, extras = extras, onArrival = { finish() })
-
 @JvmOverloads
 @JvmName("startActivityForResult")
 fun Activity.startRouterActivityForResult(
   path: String,
   requestCode: Int,
   vararg postcard: Pair<String, Any>,
-  bundle: Bundle? = null,
+  extras: Bundle? = null,
   callback: NavigationCallback? = null
 ) {
-  ARouter.getInstance().build(path).with(bundle).with(*postcard).navigation(this, requestCode, callback)
+  ARouter.getInstance().build(path).with(extras).with(*postcard).navigation(this, requestCode, callback)
 }
 
 @JvmName("startActivityForResult")
@@ -104,14 +107,45 @@ fun Activity.startRouterActivityForResult(
   })
 }
 
-@JvmName("startActivityForResultAndFinish")
-fun Activity.startRouterActivityForResultAndFinish(
+@JvmOverloads
+@JvmName("startActivity")
+fun Fragment.startRouterActivity(
   path: String,
-  requestCode: Int,
   vararg postcard: Pair<String, Any>,
-  extras: Bundle? = null
+  extras: Bundle? = null,
+  callback: NavigationCallback? = null
 ) =
-  startRouterActivityForResult(path, requestCode, *postcard, bundle = extras) { finish() }
+  requireContext().startRouterActivity(path, *postcard, extras = extras, callback = callback)
+
+@JvmName("startActivity")
+fun Fragment.startRouterActivity(
+  path: String,
+  vararg postcard: Pair<String, Any>,
+  extras: Bundle? = null,
+  onArrival: (postcard: Postcard) -> Unit
+) =
+  requireContext().startRouterActivity(path, *postcard, extras = extras, onArrival = onArrival)
+
+//@JvmOverloads
+//@JvmName("startActivityForResult")
+//fun Fragment.startRouterActivityForResult(
+//  path: String,
+//  requestCode: Int,
+//  vararg postcard: Pair<String, Any>,
+//  extras: Bundle? = null,
+//  callback: NavigationCallback? = null
+//) =
+//  requireActivity().startRouterActivityForResult(path, requestCode, *postcard, extras = extras, callback = callback)
+//
+//@JvmName("startActivityForResult")
+//fun Fragment.startRouterActivityForResult(
+//  path: String,
+//  requestCode: Int,
+//  vararg postcard: Pair<String, Any>,
+//  extras: Bundle? = null,
+//  onArrival: (postcard: Postcard) -> Unit
+//) =
+//  requireActivity().startRouterActivityForResult(path, requestCode, *postcard, extras = extras, onArrival = onArrival)
 
 @JvmName("enableLoginInterceptor")
 fun enableRouterLoginInterceptor(loginPath: String, onCheckLogin: () -> Boolean) {

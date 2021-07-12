@@ -13,7 +13,7 @@ internal var loginObserver: (() -> Unit)? = null
 fun Activity.loginSuccess() {
   val path = intent.getStringExtra(KEY_ROUTER_PATH)
   if (path != null) {
-    startRouterActivityAndFinish(path, extras = intent.extras)
+    startRouterActivity(path, extras = intent.extras) { finish() }
   } else {
     finish()
   }
