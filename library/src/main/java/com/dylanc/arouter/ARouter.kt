@@ -37,6 +37,13 @@ fun <T : IProvider> findRouterService(clazz: Class<T>): T =
 inline fun <reified T : IProvider> routerServices() =
   lazy { findRouterService(T::class.java) }
 
+@JvmOverloads
+fun findRouterFragment(path: String, vararg postcard: Pair<String, Any>, bundle: Bundle? = null): Fragment =
+  ARouter.getInstance().build(path).with(bundle).with(*postcard).navigation() as Fragment
+
+fun routerFragments(path: String, block: Postcard.() -> Unit) =
+  lazy { ARouter.getInstance().build(path).apply(block).navigation() as Fragment }
+
 @JvmName("startActivity")
 fun startRouterActivity(path: String, vararg postcard: Pair<String, Any>, bundle: Bundle? = null) {
   ARouter.getInstance().build(path).with(bundle).with(*postcard).navigation()
@@ -105,10 +112,6 @@ fun Activity.startRouterActivityForResultAndFinish(
   extras: Bundle? = null
 ) =
   startRouterActivityForResult(path, requestCode, *postcard, bundle = extras) { finish() }
-
-@JvmOverloads
-fun findRouterFragment(path: String, vararg postcard: Pair<String, Any>, bundle: Bundle? = null): Fragment =
-  ARouter.getInstance().build(path).with(bundle).with(*postcard).navigation() as Fragment
 
 @JvmName("enableLoginInterceptor")
 fun enableRouterLoginInterceptor(loginPath: String, onCheckLogin: () -> Boolean) {
