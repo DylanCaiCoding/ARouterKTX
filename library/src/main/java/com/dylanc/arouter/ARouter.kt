@@ -41,7 +41,7 @@ inline fun <reified T : IProvider> routerServices() =
 fun findRouterFragment(path: String, vararg postcard: Pair<String, Any>, bundle: Bundle? = null): Fragment =
   ARouter.getInstance().build(path).with(bundle).with(*postcard).navigation() as Fragment
 
-fun routerFragments(path: String, block: Postcard.() -> Unit) =
+fun routerFragments(path: String, block: Postcard.() -> Unit = {}) =
   lazy { ARouter.getInstance().build(path).apply(block).navigation() as Fragment }
 
 @JvmName("startActivity")
