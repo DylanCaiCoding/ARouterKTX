@@ -13,13 +13,17 @@ import com.alibaba.android.arouter.facade.template.IInterceptor
 class LoginInterceptor : IInterceptor {
 
   override fun process(postcard: Postcard, callback: InterceptorCallback) {
-    val needLogin = postcard.extras.getBoolean(KEY_CHECK_LOGIN)
-    if (needLogin && postcard.path != loginActivityPath && checkLogin?.invoke() == false) {
+    val isCheckLogin = postcard.extras.getBoolean(KEY_CHECK_LOGIN)
+    if (isCheckLogin && postcard.path != loginActivityPath && checkLogin?.invoke() == false) {
       callback.onInterrupt(null)
-      return
+    } else {
+      callback.onContinue(postcard)
     }
-    callback.onContinue(postcard)
   }
 
   override fun init(context: Context) {}
+
+  companion object {
+    internal var checkLogin: (() -> Boolean)? = null
+  }
 }

@@ -13,9 +13,9 @@ internal class LoginNavCallback(
 ) : NavCallback() {
 
   override fun onInterrupt(postcard: Postcard) {
-    if (checkLogin == null) return
+    val loginPath = loginActivityPath ?: return
     context.startRouterActivity(
-      loginActivityPath!!,
+      loginPath,
       KEY_ROUTER_PATH to postcard.path,
       extras = postcard.extras,
       onArrival = {
