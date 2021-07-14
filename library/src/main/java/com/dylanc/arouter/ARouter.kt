@@ -29,25 +29,44 @@ fun Application.initARouter(isDebug: Boolean = false) {
   ARouter.init(this)
 }
 
-fun <T : IProvider> findRouterService(clazz: Class<T>): T =
+fun <T : IProvider> findRouterService(clazz: Class<T>): T? =
   ARouter.getInstance().navigation(clazz)
 
 @Suppress("UNCHECKED_CAST")
-fun <T : IProvider> findRouterService(path: String): T =
-  ARouter.getInstance().build(path).navigation() as T
+fun <T : IProvider> findRouterService(path: String): T? =
+  ARouter.getInstance().build(path).navigation() as T?
 
 inline fun <reified T : IProvider> routerServices() =
-  lazy { findRouterService(T::class.java) }
+  lazy {
+    try {
+      findRouterService(T::class.java)!!
+    } catch (e: Exception) {
+      val canonicalName = T::class.java.canonicalName
+      throw IllegalArgumentException("There's no router service matched. Interface is $canonicalName")
+    }
+  }
 
 inline fun <reified T : IProvider> routerServices(path: String) =
-  lazy { findRouterService<T>(path) }
+  lazy {
+    try {
+      findRouterService<T>(path)!!
+    } catch (e: NullPointerException) {
+      throw IllegalArgumentException("There's no router service matched. path = [$path]")
+    }
+  }
 
 @JvmOverloads
-fun findRouterFragment(path: String, vararg pairs: Pair<String, Any?>, arguments: Bundle? = null): Fragment =
-  ARouter.getInstance().build(path).with(arguments).with(*pairs).navigation() as Fragment
+fun findRouterFragment(path: String, vararg pairs: Pair<String, Any?>, arguments: Bundle? = null): Fragment? =
+  ARouter.getInstance().build(path).with(arguments).with(*pairs).navigation() as Fragment?
 
 fun routerFragments(path: String, block: Postcard.() -> Unit = {}) =
-  lazy { ARouter.getInstance().build(path).apply(block).navigation() as Fragment }
+  lazy {
+    try {
+      ARouter.getInstance().build(path).apply(block).navigation() as Fragment
+    } catch (e: NullPointerException) {
+      throw IllegalArgumentException("There's no router fragment matched. path = [$path]")
+    }
+  }
 
 @JvmName("startActivity")
 fun startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, extras: Bundle? = null) {
