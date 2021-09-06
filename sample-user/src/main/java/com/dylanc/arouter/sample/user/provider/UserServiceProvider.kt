@@ -6,11 +6,9 @@ import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.dylanc.arouter.sample.common.service.UserService
-import com.dylanc.arouter.sample.common.startMainActivity
 import com.dylanc.arouter.sample.core.net.showLoading
 import com.dylanc.arouter.sample.user.api.UserApi
 import com.dylanc.arouter.sample.user.utils.UserRepository
-import com.dylanc.longan.finishAllActivities
 import com.dylanc.retrofit.helper.apiServiceOf
 import com.dylanc.retrofit.helper.rxjava.io2mainThread
 
@@ -44,11 +42,6 @@ class LoginServiceProvider : UserService {
 
   override fun logout(activity: Activity) {
     UserRepository.logout()
-    activity.startMainActivity {
-//      finishAllActivitiesExceptNewest()
-//      activity.finish()
-      finishAllActivities()
-    }
   }
 
   override fun isLogin(): Boolean =

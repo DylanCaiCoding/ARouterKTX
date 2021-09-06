@@ -4,29 +4,63 @@
 package com.dylanc.arouter
 
 import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.Postcard
-import com.alibaba.android.arouter.facade.callback.NavigationCallback
 import com.alibaba.android.arouter.facade.template.IProvider
 import com.alibaba.android.arouter.launcher.ARouter
+import com.dylanc.arouter.app.application
+import com.dylanc.arouter.interceptor.LoginInterceptor
+import com.dylanc.arouter.postcard.PostcardBuilder
+import com.dylanc.arouter.postcard.with
 
 /**
  * @author Dylan Cai
  */
-internal const val KEY_ROUTER_PATH = "router_path"
-internal const val KEY_CHECK_LOGIN = "router_check_login"
-internal var loginActivityPath: String? = null
 
-@JvmName("init")
-fun Application.initARouter(isDebug: Boolean = false) {
-  if (isDebug) {
-    ARouter.openLog()
-    ARouter.openDebug()
+private var loginObserver: (() -> Unit)? = null
+internal const val KEY_ROUTER_PATH = "router_path"
+
+@JvmName("startActivity")
+fun startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, block: PostcardBuilder.() -> Unit = {}) =
+  application.startRouterActivity(path, *pairs, block = block)
+
+
+@JvmName("startActivity")
+fun Fragment.startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, block: PostcardBuilder.() -> Unit = {}) =
+  requireActivity().startRouterActivity(path, *pairs, block = block)
+
+@JvmName("startActivity")
+fun Context.startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, block: PostcardBuilder.() -> Unit = {}) {
+  ARouter.getInstance().build(path).apply {
+    val builder = PostcardBuilder(this).apply(block)
+    with(*pairs).navigation(this@startRouterActivity, builder.callback())
   }
-  ARouter.init(this)
+}
+
+@JvmOverloads
+@JvmName("startActivityForResult")
+fun Fragment.startRouterActivityForResult(
+  path: String,
+  requestCode: Int,
+  vararg pairs: Pair<String, Any?>,
+  block: PostcardBuilder.() -> Unit = {}
+) =
+  requireActivity().startRouterActivityForResult(path, requestCode, *pairs, block = block)
+
+@JvmOverloads
+@JvmName("startActivityForResult")
+fun Activity.startRouterActivityForResult(
+  path: String,
+  requestCode: Int,
+  vararg pairs: Pair<String, Any?>,
+  block: PostcardBuilder.() -> Unit = {}
+) {
+  ARouter.getInstance().build(path).apply {
+    val builder = PostcardBuilder(this).apply(block)
+    with(*pairs).navigation(this@startRouterActivityForResult, requestCode, builder.callback())
+  }
 }
 
 fun <T : IProvider> findRouterService(clazz: Class<T>): T? =
@@ -68,62 +102,23 @@ fun routerFragments(path: String, block: Postcard.() -> Unit = {}) =
     }
   }
 
-@JvmName("startActivity")
-fun startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, extras: Bundle? = null) {
-  ARouter.getInstance().build(path).with(extras).with(*pairs).navigation()
+fun Activity.loginSuccess() {
+  val path = intent.getStringExtra(KEY_ROUTER_PATH)
+  if (path != null) {
+    startRouterActivity(path) {
+      bundle(intent.extras)
+      finishOnArrival()
+    }
+  } else {
+    finish()
+  }
+  loginObserver?.invoke()
+  loginObserver = null
 }
 
-@JvmOverloads
-@JvmName("startActivity")
-fun Context.startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, extras: Bundle? = null, callback: NavigationCallback? = null) {
-  ARouter.getInstance().build(path).with(extras).with(*pairs).navigation(this, callback)
-}
-
-@JvmName("startActivity")
-fun Context.startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, extras: Bundle? = null, onArrival: (Postcard) -> Unit) =
-  startRouterActivity(path, *pairs, extras = extras, callback = NavCallback(onArrival = onArrival))
-
-@JvmOverloads
-@JvmName("startActivity")
-fun Fragment.startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, extras: Bundle? = null, callback: NavigationCallback? = null) =
-  requireContext().startRouterActivity(path, *pairs, extras = extras, callback = callback)
-
-@JvmName("startActivity")
-fun Fragment.startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, extras: Bundle? = null, onArrival: (Postcard) -> Unit) =
-  requireContext().startRouterActivity(path, *pairs, extras = extras, onArrival = onArrival)
-
-@JvmOverloads
-@JvmName("startActivityForResult")
-fun Activity.startRouterActivityForResult(path: String, requestCode: Int, vararg pairs: Pair<String, Any?>, extras: Bundle? = null) {
-  ARouter.getInstance().build(path).with(extras).with(*pairs).navigation(this, requestCode)
-}
-
-@JvmOverloads
-@JvmName("startActivityForResult")
-fun Fragment.startRouterActivityForResult(path: String, requestCode: Int, vararg pairs: Pair<String, Any?>, extras: Bundle? = null) =
-  requireActivity().startRouterActivityForResult(path, requestCode, *pairs, extras = extras)
-
-@JvmName("enableLoginInterceptor")
-fun enableRouterLoginInterceptor(loginPath: String, onCheckLogin: () -> Boolean) {
-  loginActivityPath = loginPath
-  LoginInterceptor.checkLogin = onCheckLogin
-}
-
-@JvmOverloads
-@JvmName("startActivityCheckLogin")
-fun Context.startRouterActivityCheckLogin(
-  path: String,
-  vararg pairs: Pair<String, Any?>,
-  extras: Bundle = Bundle(),
-  onArrival: ((Postcard) -> Unit)? = null
-) {
-  extras.putBoolean(KEY_CHECK_LOGIN, true)
-  startRouterActivity(path, *pairs, extras = extras, callback = LoginNavCallback(this, onArrival))
-}
-
-fun executeCheckLogin(action: () -> Unit) =
-  if (loginActivityPath != null && LoginInterceptor.checkLogin?.invoke() == false) {
-    startRouterActivity(loginActivityPath!!)
+fun doAfterLogin(action: () -> Unit) =
+  if (LoginInterceptor.loginActivityPath != null && LoginInterceptor.checkLogin?.invoke() == false) {
+    application.startRouterActivity(LoginInterceptor.loginActivityPath!!)
     loginObserver = action
   } else {
     action.invoke()
