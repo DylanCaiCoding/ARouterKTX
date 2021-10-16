@@ -1,15 +1,12 @@
 package com.dylanc.arouter.sample.user
 
 import android.app.Application
-import android.util.Log
 import com.dylanc.arouter.interceptor.LoginInterceptor
 import com.dylanc.arouter.routerServices
-import com.dylanc.arouter.sample.common.PATH_LOGIN
-import com.dylanc.arouter.sample.common.PATH_USER_INFO
-import com.dylanc.arouter.sample.common.service.UserService
-import com.dylanc.longan.TAG
-import com.dylanc.retrofit.helper.initRetrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import com.dylanc.arouter.sample.user.service.PATH_LOGIN
+import com.dylanc.arouter.sample.user.service.PATH_USER_INFO
+import com.dylanc.arouter.sample.user.service.UserService
+import com.dylanc.retrofit.initRetrofit
 
 /**
  * @author Dylan Cai
@@ -25,12 +22,7 @@ class App : Application() {
     LoginInterceptor.enable(PATH_LOGIN, listOf(PATH_USER_INFO)) { userService.isLogin() }
 
     initRetrofit {
-      debug(BuildConfig.DEBUG)
       baseUrl("https://fastmock.site/")
-      addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-      addHttpLog {
-        Log.i(TAG, it)
-      }
     }
   }
 }

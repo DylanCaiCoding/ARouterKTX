@@ -5,7 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.dylanc.arouter.sample.R
-import com.dylanc.arouter.sample.common.PATH_MAIN
+import com.dylanc.arouter.sample.base.constants.PATH_MAIN
 import com.dylanc.arouter.startRouterActivity
 
 class SplashActivity : AppCompatActivity() {
@@ -14,9 +14,7 @@ class SplashActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_splash)
     Handler(Looper.getMainLooper()).postDelayed({
-      startRouterActivity(PATH_MAIN) {
-        finishOnArrival()
-      }
+      startRouterActivity(PATH_MAIN) { finishOnArrival() }
     }, 1000)
   }
 }

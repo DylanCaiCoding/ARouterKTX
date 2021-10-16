@@ -39,12 +39,10 @@ dependencies {
     api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
     api "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
-    api 'com.github.DylanCaiCoding.ViewBindingKTX:viewbinding-ktx:1.2.3'
-    api 'com.github.DylanCaiCoding.RetrofitHelper:retrofithelper-core:2.0.0-alpha3'
-    kapt 'com.github.DylanCaiCoding.RetrofitHelper:retrofithelper-compiler:2.0.0-alpha3'
-    api 'com.github.DylanCaiCoding.RetrofitHelper:retrofithelper-rxjava:2.0.0-alpha3'
-    api 'com.github.DylanCaiCoding:Longan:0.1.10'
-    api 'com.github.DylanCaiCoding:ActivityResultLauncher:1.0.0-beta'
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    api 'com.github.DylanCaiCoding.ViewBindingKTX:viewbinding-ktx:1.2.4'
+    api "com.github.DylanCaiCoding.RetrofitKTX:retrofit-ktx:$retrofit_ktx_version"
+    kapt "com.github.DylanCaiCoding.RetrofitKTX:retrofit-compiler:$retrofit_ktx_version"
+    api "com.github.DylanCaiCoding.RetrofitKTX:retrofit-coroutines:$retrofit_ktx_version"
+    api 'com.github.DylanCaiCoding:Longan:1.0.0'
+    api 'com.github.DylanCaiCoding:MMKV-KTX:1.0.0'
 }

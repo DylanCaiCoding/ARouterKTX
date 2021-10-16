@@ -1,8 +1,7 @@
 package com.dylanc.arouter.sample.user.api
 
-import com.dylanc.arouter.sample.core.bean.ApiResponse
-import com.dylanc.arouter.sample.user.bean.User
-import io.reactivex.Single
+import com.dylanc.arouter.sample.base.bean.ApiResponse
+import com.dylanc.arouter.sample.user.service.bean.User
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -17,8 +16,8 @@ interface UserApi {
 
   @FormUrlEncoded
   @POST("$USER/login")
-  fun login(
+  suspend fun login(
     @Field("username") username: String,
     @Field("password") password: String
-  ): Single<ApiResponse<User>>
+  ): ApiResponse<User>
 }

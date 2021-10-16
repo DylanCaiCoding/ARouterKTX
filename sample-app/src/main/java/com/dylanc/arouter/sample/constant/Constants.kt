@@ -1,6 +1,6 @@
 package com.dylanc.arouter.sample.constant
 
-import com.dylanc.retrofit.helper.annotations.BaseUrl
+import com.dylanc.retrofit.annotations.BaseUrl
 
 /**
  * @author Dylan Cai

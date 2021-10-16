@@ -1,4 +1,4 @@
-if (debugComponents) {
+if (debugUserComponent) {
     apply plugin: 'com.android.application'
 } else {
     apply plugin: 'com.android.library'
@@ -10,10 +10,10 @@ apply plugin: 'kotlinx-serialization'
 android {
     compileSdkVersion rootProject.compile_sdk_version
     buildToolsVersion rootProject.build_tools_version
-//    resourcePrefix "user_"
+    resourcePrefix "user_"
 
     defaultConfig {
-        if (debugComponents) {
+        if (debugUserComponent) {
             applicationId "com.dylanc.arouter.sample.user"
         }
         minSdkVersion rootProject.min_sdk_version
@@ -25,7 +25,7 @@ android {
 
     sourceSets {
         main {
-            if (debugComponents) {
+            if (debugUserComponent) {
                 manifest.srcFile 'src/main/AndroidManifest.xml'
             } else {
                 manifest.srcFile 'src/main/manifest/AndroidManifest.xml'
@@ -51,7 +51,7 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
+        viewBinding true
     }
 
     flavorDimensions "userUI"
@@ -73,7 +73,10 @@ kapt {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(path: ':sample-common')
-    implementation 'com.google.code.gson:gson:2.8.7'
+    implementation project(path: ':sample-user-service')
     kapt "com.alibaba:arouter-compiler:$arouter_compiler_version"
+
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test:runner:$runner_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 }

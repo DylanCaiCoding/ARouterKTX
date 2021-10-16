@@ -32,7 +32,7 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
+        viewBinding true
     }
 
     flavorDimensions "userUI", "paymentUI"
@@ -54,13 +54,16 @@ kapt {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(path: ':sample-common')
-    if (!debugComponents) {
+    implementation project(path: ':sample-user-service')
+    if (!debugUserComponent) {
         runtimeOnly project(path: ':sample-user')
+    }
+    implementation project(path: ':sample-payment-service')
+    if (!debugPayComponent) {
         runtimeOnly project(path: ':sample-payment')
     }
     kapt "com.alibaba:arouter-compiler:$arouter_compiler_version"
-    kapt 'com.github.DylanCaiCoding.RetrofitHelper:retrofithelper-compiler:2.0.0-alpha3'
+    kapt "com.github.DylanCaiCoding.RetrofitKTX:retrofit-compiler:$retrofit_ktx_version"
 
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test:runner:$runner_version"
