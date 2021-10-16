@@ -26,7 +26,6 @@ internal const val KEY_ROUTER_PATH = "router_path"
 fun startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, block: PostcardBuilder.() -> Unit = {}) =
   application.startRouterActivity(path, *pairs, block = block)
 
-
 @JvmName("startActivity")
 fun Fragment.startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, block: PostcardBuilder.() -> Unit = {}) =
   requireActivity().startRouterActivity(path, *pairs, block = block)
@@ -105,15 +104,12 @@ fun routerFragments(path: String, block: Postcard.() -> Unit = {}) =
 fun Activity.loginSuccess() {
   val path = intent.getStringExtra(KEY_ROUTER_PATH)
   if (path != null) {
-    startRouterActivity(path) {
-      bundle(intent.extras)
-      finishOnArrival()
-    }
+    startRouterActivity(path) { finishOnArrival() }
   } else {
     finish()
+    loginObserver?.invoke()
+    loginObserver = null
   }
-  loginObserver?.invoke()
-  loginObserver = null
 }
 
 fun doAfterLogin(action: () -> Unit) =

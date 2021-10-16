@@ -73,7 +73,7 @@ class PostcardBuilder(private val postcard: Postcard) {
     postcard.with(bundle)
   }
 
-  fun flag(flag: Int) {
+  fun flags(flag: Int) {
     postcard.withFlags(flag)
   }
 
