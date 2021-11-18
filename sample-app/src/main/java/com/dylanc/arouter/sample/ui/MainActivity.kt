@@ -3,22 +3,30 @@ package com.dylanc.arouter.sample.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.dylanc.arouter.doAfterLogin
-import com.dylanc.arouter.routerServices
+import com.dylanc.arouter.activityresult.launch
+import com.dylanc.arouter.activityresult.startRouterActivityLauncher
+import com.dylanc.arouter.safeRouterServices
 import com.dylanc.arouter.sample.R
 import com.dylanc.arouter.sample.base.constants.PATH_MAIN
 import com.dylanc.arouter.sample.databinding.ActivityMainBinding
 import com.dylanc.arouter.sample.payment.service.PATH_PAYMENT
+import com.dylanc.arouter.sample.user.service.PATH_LOGIN
 import com.dylanc.arouter.sample.user.service.PATH_USER_INFO
 import com.dylanc.arouter.sample.user.service.UserService
 import com.dylanc.arouter.startRouterActivity
+import com.dylanc.longan.toast
 import com.dylanc.viewbinding.binding
 
 @Route(path = PATH_MAIN)
 class MainActivity : AppCompatActivity() {
 
   private val binding: ActivityMainBinding by binding()
-  private val userService: UserService by routerServices()
+  private val userService: UserService by safeRouterServices()
+//  private val startRouterActivityLauncher = startRouterActivityLauncher {
+//    if (it.resultCode == RESULT_OK) {
+//      toast("nice")
+//    }
+//  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -34,10 +42,10 @@ class MainActivity : AppCompatActivity() {
         if (tvUsername.text.toString() != getString(R.string.login)) {
           startRouterActivity(PATH_USER_INFO)
         } else {
-          doAfterLogin {
-            tvUsername.text = userService.username
-          }
+          tvUsername.text = userService.username
         }
+
+//        startRouterActivityLauncher.launch(PATH_LOGIN)
       }
 
       btnPay.setOnClickListener {

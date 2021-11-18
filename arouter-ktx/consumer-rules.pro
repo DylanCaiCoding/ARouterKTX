@@ -1,3 +1,4 @@
+-keep class com.dylanc.arouter.*{*;}
 
 -keep public class com.alibaba.android.arouter.routes.**{*;}
 -keep public class com.alibaba.android.arouter.facade.**{*;}
