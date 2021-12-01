@@ -54,13 +54,13 @@ kapt {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(path: ':sample-user-service')
+    implementation project(path: ':sample-user-module-api')
     if (!debugUserComponent) {
-        runtimeOnly project(path: ':sample-user')
+        runtimeOnly project(path: ':sample-user-module-impl')
     }
-    implementation project(path: ':sample-payment-service')
+    implementation project(path: ':sample-payment-module-api')
     if (!debugPayComponent) {
-        runtimeOnly project(path: ':sample-payment')
+        runtimeOnly project(path: ':sample-payment-module-impl')
     }
     kapt "com.alibaba:arouter-compiler:$arouter_compiler_version"
     kapt "com.github.DylanCaiCoding.RetrofitKTX:retrofit-compiler:$retrofit_ktx_version"

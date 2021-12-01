@@ -73,7 +73,7 @@ kapt {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(path: ':sample-user-service')
+    implementation project(path: ':sample-user-module-api')
     kapt "com.alibaba:arouter-compiler:$arouter_compiler_version"
 
     testImplementation "junit:junit:$junit_version"

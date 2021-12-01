@@ -72,7 +72,7 @@ kapt {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     kapt "com.alibaba:arouter-compiler:$arouter_compiler_version"
-    implementation project(path: ':sample-payment-service')
+    implementation project(path: ':sample-payment-module-api')
 
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test:runner:$runner_version"
