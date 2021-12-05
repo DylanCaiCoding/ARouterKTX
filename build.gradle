@@ -19,7 +19,7 @@ buildscript {
         espresso_version = '3.4.0'
         gradle_version = '4.2.2'
         junit_version = '4.13.2'
-        kotlin_version = '1.5.31'
+        kotlin_version = '1.6.0'
         leak_canary_version = '2.7'
         lifecycle_version = '2.2.0'
         retrofit_ktx_version = '1.0.0-alpha4'
