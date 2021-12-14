@@ -6,13 +6,12 @@ import com.alibaba.android.arouter.facade.annotation.Interceptor
 import com.alibaba.android.arouter.facade.callback.InterceptorCallback
 import com.alibaba.android.arouter.facade.template.IInterceptor
 import com.dylanc.arouter.KEY_ROUTER_PATH
-import com.dylanc.arouter.app.application
 import com.dylanc.arouter.startRouterActivity
 
 /**
  * @author Dylan Cai
  */
-@Interceptor(priority = 65535)
+@Interceptor(priority = Int.MAX_VALUE)
 class LoginInterceptor : IInterceptor {
 
   override fun process(postcard: Postcard, callback: InterceptorCallback) {

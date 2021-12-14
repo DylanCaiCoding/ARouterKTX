@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import com.alibaba.android.arouter.facade.Postcard
 import com.alibaba.android.arouter.facade.callback.NavCallback
+import com.alibaba.android.arouter.facade.callback.NavigationCallback
 import com.dylanc.arouter.interceptor.LoginInterceptor
 import java.io.Serializable
 
@@ -85,11 +86,12 @@ class PostcardBuilder(private val postcard: Postcard) {
     onArrival = block
   }
 
-  fun finishOnArrival() {
+  fun finishAfterArrival() {
     onArrival = {
-      val context = it.context
-      if (context is Activity) {
-        context.finish()
+      it.context.run {
+        if (this is Activity) {
+          finish()
+        }
       }
     }
   }
@@ -106,25 +108,30 @@ class PostcardBuilder(private val postcard: Postcard) {
     onLost = block
   }
 
-  internal fun callback() = object : NavCallback() {
-    override fun onArrival(postcard: Postcard) {
-      onArrival?.invoke(postcard)
-    }
+  internal val callback: NavigationCallback?
+    get() = if (onArrival != null || onInterrupt != null || onFound != null || onLost != null) {
+      object : NavCallback() {
+        override fun onArrival(postcard: Postcard) {
+          onArrival?.invoke(postcard)
+        }
 
-    override fun onFound(postcard: Postcard) {
-      onFound?.invoke(postcard)
-    }
+        override fun onFound(postcard: Postcard) {
+          onFound?.invoke(postcard)
+        }
 
-    override fun onLost(postcard: Postcard) {
-      onLost?.invoke(postcard)
-    }
+        override fun onLost(postcard: Postcard) {
+          onLost?.invoke(postcard)
+        }
 
-    override fun onInterrupt(postcard: Postcard) {
-      if (LoginInterceptor.isInterceptPath(postcard.path)) {
-        onArrival?.invoke(postcard)
-      } else {
-        onInterrupt?.invoke(postcard)
+        override fun onInterrupt(postcard: Postcard) {
+          if (LoginInterceptor.isInterceptPath(postcard.path)) {
+            onArrival?.invoke(postcard)
+          } else {
+            onInterrupt?.invoke(postcard)
+          }
+        }
       }
+    } else {
+      null
     }
-  }
 }

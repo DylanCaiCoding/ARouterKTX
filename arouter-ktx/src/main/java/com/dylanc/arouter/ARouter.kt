@@ -28,7 +28,7 @@ fun Fragment.startRouterActivity(path: String, vararg pairs: Pair<String, Any?>,
 fun Context.startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, block: PostcardBuilder.() -> Unit = {}) {
   ARouter.getInstance().build(path).apply {
     val builder = PostcardBuilder(this).apply(block)
-    with(*pairs).navigation(this@startRouterActivity, builder.callback())
+    with(*pairs).navigation(this@startRouterActivity, builder.callback)
   }
 }
 
@@ -72,7 +72,7 @@ fun safeRouterFragments(path: String, block: Postcard.() -> Unit = {}) =
 fun Activity.loginSuccess() {
   val path = intent.getStringExtra(KEY_ROUTER_PATH)
   if (path != null) {
-    startRouterActivity(path) { finishOnArrival() }
+    startRouterActivity(path) { finishAfterArrival() }
   } else {
     setResult(Activity.RESULT_OK)
     finish()
