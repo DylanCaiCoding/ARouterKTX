@@ -14,7 +14,7 @@ class SplashActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_splash)
     Handler(Looper.getMainLooper()).postDelayed({
-      startRouterActivity(PATH_MAIN) { finishOnArrival() }
+      startRouterActivity(PATH_MAIN) { finishAfterArrival() }
     }, 1000)
   }
 }
