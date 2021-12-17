@@ -9,23 +9,21 @@ import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.Postcard
 import com.alibaba.android.arouter.facade.template.IProvider
 import com.alibaba.android.arouter.launcher.ARouter
-import com.dylanc.arouter.app.application
 import com.dylanc.arouter.postcard.PostcardBuilder
 import com.dylanc.arouter.postcard.with
-
 
 internal const val KEY_ROUTER_PATH = "router_path"
 
 @JvmName("startActivity")
 fun startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, block: PostcardBuilder.() -> Unit = {}) =
-  application.startRouterActivity(path, *pairs, block = block)
+  null.startRouterActivity(path, *pairs, block = block)
 
 @JvmName("startActivity")
 fun Fragment.startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, block: PostcardBuilder.() -> Unit = {}) =
   requireActivity().startRouterActivity(path, *pairs, block = block)
 
 @JvmName("startActivity")
-fun Context.startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, block: PostcardBuilder.() -> Unit = {}) {
+fun Context?.startRouterActivity(path: String, vararg pairs: Pair<String, Any?>, block: PostcardBuilder.() -> Unit = {}) {
   ARouter.getInstance().build(path).apply {
     val builder = PostcardBuilder(this).apply(block)
     with(*pairs).navigation(this@startRouterActivity, builder.callback)

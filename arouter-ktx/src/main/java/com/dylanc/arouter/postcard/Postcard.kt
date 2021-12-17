@@ -11,11 +11,6 @@ import com.alibaba.android.arouter.facade.callback.NavigationCallback
 import com.dylanc.arouter.interceptor.LoginInterceptor
 import java.io.Serializable
 
-/**
- * @author Dylan Cai
- */
-
-
 fun Postcard.with(vararg pairs: Pair<String, Any?>) = apply {
   for ((key, value) in pairs) {
     when (value) {
@@ -88,11 +83,7 @@ class PostcardBuilder(private val postcard: Postcard) {
 
   fun finishAfterArrival() {
     onArrival = {
-      it.context.run {
-        if (this is Activity) {
-          finish()
-        }
-      }
+      (it.context as? Activity)?.finish()
     }
   }
 
