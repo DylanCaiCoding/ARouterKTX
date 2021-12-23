@@ -18,7 +18,9 @@ class App : Application() {
 
   override fun onCreate() {
     super.onCreate()
-    LoginInterceptor.enable(PATH_LOGIN, listOf(PATH_USER_INFO)) { userService.isLogin() }
+    LoginInterceptor.enable {
+      userService.isLogin()
+    }
 
     initRetrofit {
       baseUrl("https://fastmock.site/")

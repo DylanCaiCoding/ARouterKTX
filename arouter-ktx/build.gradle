@@ -42,5 +42,6 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.3.6'
     implementation "androidx.startup:startup-runtime:1.1.0"
     api "com.alibaba:arouter-api:$arouter_api_version"
+    api project(path: ':arouter-annotations')
     kapt "com.alibaba:arouter-compiler:$arouter_compiler_version"
 }

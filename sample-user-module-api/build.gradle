@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.compile_sdk_version
@@ -30,11 +31,17 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+}
 
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api project(path: ':sample-base')
     api project(path: ':arouter-ktx')
+    kapt project(path: ':arouter-compiler')
 }

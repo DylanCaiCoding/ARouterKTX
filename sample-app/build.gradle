@@ -62,6 +62,7 @@ dependencies {
     if (!debugPayComponent) {
         runtimeOnly project(path: ':sample-payment-module-impl')
     }
+    kapt project(path: ':arouter-compiler')
     kapt "com.alibaba:arouter-compiler:$arouter_compiler_version"
     kapt "com.github.DylanCaiCoding.RetrofitKTX:retrofit-compiler:$retrofit_ktx_version"
 

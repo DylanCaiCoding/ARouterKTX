@@ -10,7 +10,7 @@
       android:exported="false"
       tools:node="merge">
       <meta-data
-        android:name="com.dylanc.arouter.app.ARouterInitializer"
+        android:name="com.dylanc.arouter.initializer.ARouterInitializer"
         android:value="androidx.startup" />
     </provider>
   </application>

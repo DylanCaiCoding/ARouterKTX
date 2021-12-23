@@ -1,5 +1,6 @@
 package com.dylanc.arouter.sample.constant
 
+import com.dylanc.arouter.annotations.RequireLoginPath
 import com.dylanc.retrofit.annotations.BaseUrl
 
 /**
@@ -8,3 +9,8 @@ import com.dylanc.retrofit.annotations.BaseUrl
  */
 @BaseUrl
 const val BASE_URL = "https://fastmock.site/"
+
+const val GROUP_APP = "/app"
+
+@RequireLoginPath
+const val PATH_MAIN = "$GROUP_APP/main"

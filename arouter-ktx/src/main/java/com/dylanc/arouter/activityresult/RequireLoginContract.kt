@@ -13,14 +13,14 @@ fun ActivityResultCaller.requireLoginLauncher(block: (Boolean) -> Unit) =
 class RequireLoginContract : ActivityResultContract<Unit, Boolean>() {
 
   override fun createIntent(context: Context, input: Unit?) =
-    Intent(context, routes.getActivityClass(LoginInterceptor.loginActivityPath!!))
+    Intent(context, routes.getActivityClass(loginActivityPath!!))
 
   override fun parseResult(resultCode: Int, intent: Intent?) = resultCode == Activity.RESULT_OK
 
   override fun getSynchronousResult(context: Context, input: Unit?): SynchronousResult<Boolean>? =
     when {
       LoginInterceptor.checkLogin?.invoke() == true -> SynchronousResult(true)
-      LoginInterceptor.loginActivityPath == null -> SynchronousResult(false)
+      loginActivityPath == null -> SynchronousResult(false)
       else -> null
     }
 }

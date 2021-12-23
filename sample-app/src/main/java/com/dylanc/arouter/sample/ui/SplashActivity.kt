@@ -5,7 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.dylanc.arouter.sample.R
-import com.dylanc.arouter.sample.base.constants.PATH_MAIN
+import com.dylanc.arouter.sample.constant.PATH_MAIN
 import com.dylanc.arouter.startRouterActivity
 
 class SplashActivity : AppCompatActivity() {

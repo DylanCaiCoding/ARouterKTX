@@ -13,10 +13,13 @@ internal val routes: Map<String, RouteMeta> by lazy {
 
 internal fun Map<String, RouteMeta>.getActivityClass(path: String): Class<*> {
   val routeMeta = get(path)
-  if (routeMeta == null){
+  if (routeMeta == null) {
     throw IllegalArgumentException("The path has no routing class.")
   } else if (routeMeta.type != RouteType.ACTIVITY) {
     throw IllegalArgumentException("The routing class for the path is not an activity type.")
   }
   return routeMeta.destination
 }
+
+internal var loginActivityPath: String? = null
+internal val requireLoginPaths = arrayListOf<String>()
