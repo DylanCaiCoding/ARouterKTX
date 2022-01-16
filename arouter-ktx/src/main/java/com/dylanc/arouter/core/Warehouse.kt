@@ -1,4 +1,4 @@
-package com.dylanc.arouter.activityresult
+package com.dylanc.arouter.core
 
 import com.alibaba.android.arouter.facade.enums.RouteType
 import com.alibaba.android.arouter.facade.model.RouteMeta

@@ -6,8 +6,8 @@ import com.alibaba.android.arouter.facade.annotation.Interceptor
 import com.alibaba.android.arouter.facade.callback.InterceptorCallback
 import com.alibaba.android.arouter.facade.template.IInterceptor
 import com.dylanc.arouter.KEY_ROUTER_PATH
-import com.dylanc.arouter.activityresult.loginActivityPath
-import com.dylanc.arouter.activityresult.requireLoginPaths
+import com.dylanc.arouter.core.loginActivityPath
+import com.dylanc.arouter.core.requireLoginPaths
 import com.dylanc.arouter.startRouterActivity
 
 /**

@@ -9,6 +9,8 @@ import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.os.bundleOf
+import com.dylanc.arouter.core.getActivityClass
+import com.dylanc.arouter.core.routes
 
 fun ActivityResultCaller.startRouterActivityLauncher(block: (ActivityResult) -> Unit) =
   registerForActivityResult(StartRouterActivityContract(), block)

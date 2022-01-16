@@ -5,6 +5,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContract
+import com.dylanc.arouter.core.getActivityClass
+import com.dylanc.arouter.core.loginActivityPath
+import com.dylanc.arouter.core.routes
 import com.dylanc.arouter.interceptor.LoginInterceptor
 
 fun ActivityResultCaller.requireLoginLauncher(block: (Boolean) -> Unit) =

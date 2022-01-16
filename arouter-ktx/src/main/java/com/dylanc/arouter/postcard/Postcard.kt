@@ -5,59 +5,14 @@ package com.dylanc.arouter.postcard
 import android.app.Activity
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.core.os.bundleOf
 import com.alibaba.android.arouter.facade.Postcard
 import com.alibaba.android.arouter.facade.callback.NavCallback
 import com.alibaba.android.arouter.facade.callback.NavigationCallback
 import com.dylanc.arouter.interceptor.LoginInterceptor
 import java.io.Serializable
 
-fun Postcard.with(vararg pairs: Pair<String, Any?>) = apply {
-  for ((key, value) in pairs) {
-    when (value) {
-      null -> withString(key, null)
-
-      is Boolean -> withBoolean(key, value)
-      is Byte -> withByte(key, value)
-      is Char -> withChar(key, value)
-      is Double -> withDouble(key, value)
-      is Float -> withFloat(key, value)
-      is Int -> withInt(key, value)
-      is Long -> withLong(key, value)
-      is Short -> withShort(key, value)
-
-      is Bundle -> withBundle(key, value)
-      is CharSequence -> withCharSequence(key, value)
-      is Parcelable -> withParcelable(key, value)
-      is Serializable -> withSerializable(key, value)
-
-      is ByteArray -> withByteArray(key, value)
-      is CharArray -> withCharArray(key, value)
-      is FloatArray -> withFloatArray(key, value)
-      is ShortArray -> withShortArray(key, value)
-
-      is Array<*> -> {
-        val componentType = value::class.java.componentType!!
-        @Suppress("UNCHECKED_CAST")
-        when {
-          Parcelable::class.java.isAssignableFrom(componentType) -> {
-            withParcelableArray(key, value as Array<Parcelable>)
-          }
-          else -> {
-            val valueType = componentType.canonicalName
-            throw IllegalArgumentException(
-              "Illegal value array type $valueType for key \"$key\""
-            )
-          }
-        }
-      }
-
-      else -> {
-        val valueType = value.javaClass.canonicalName
-        throw IllegalArgumentException("Illegal value type $valueType for key \"$key\"")
-      }
-    }
-  }
-}
+fun Postcard.with(vararg pairs: Pair<String, Any?>): Postcard = with(bundleOf(*pairs))
 
 class PostcardBuilder(private val postcard: Postcard) {
   private var onArrival: ((Postcard) -> Unit)? = null
