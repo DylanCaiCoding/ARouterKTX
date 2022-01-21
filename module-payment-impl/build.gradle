@@ -1,31 +1,30 @@
-if (debugUserComponent) {
+if (debugPayComponent) {
     apply plugin: 'com.android.application'
 } else {
     apply plugin: 'com.android.library'
 }
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlinx-serialization'
 
 android {
     compileSdkVersion rootProject.compile_sdk_version
-    buildToolsVersion rootProject.build_tools_version
-    resourcePrefix "user_"
+    resourcePrefix "payment_"
 
     defaultConfig {
-        if (debugUserComponent) {
-            applicationId "com.dylanc.arouter.sample.user"
+        if (debugPayComponent) {
+            applicationId "com.dylanc.arouter.sample.payment"
         }
         minSdkVersion rootProject.min_sdk_version
         targetSdkVersion rootProject.target_sdk_version
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     sourceSets {
         main {
-            if (debugUserComponent) {
+            if (debugPayComponent) {
                 manifest.srcFile 'src/main/AndroidManifest.xml'
             } else {
                 manifest.srcFile 'src/main/manifest/AndroidManifest.xml'
@@ -35,8 +34,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            consumerProguardFiles 'proguard-rules.pro'
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -54,13 +52,13 @@ android {
         viewBinding true
     }
 
-    flavorDimensions "userUI"
+    flavorDimensions "paymentUI"
     productFlavors {
-        userUI {
-            dimension "userUI"
+        paymentUI {
+            dimension "paymentUI"
         }
-        userUI2 {
-            dimension "userUI"
+        paymentUI2 {
+            dimension "paymentUI"
         }
     }
 }
@@ -72,9 +70,9 @@ kapt {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(path: ':sample-user-module-api')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     kapt "com.alibaba:arouter-compiler:$arouter_compiler_version"
+    implementation project(path: ':module-payment-api')
 
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test:runner:$runner_version"

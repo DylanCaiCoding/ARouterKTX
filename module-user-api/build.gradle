@@ -41,7 +41,7 @@ kapt {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api project(path: ':sample-base')
+    api project(path: ':module-base')
     api project(path: ':arouter-ktx')
     kapt project(path: ':arouter-compiler')
 }
