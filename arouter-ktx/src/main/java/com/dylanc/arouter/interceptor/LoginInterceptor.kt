@@ -6,8 +6,6 @@ import com.alibaba.android.arouter.facade.annotation.Interceptor
 import com.alibaba.android.arouter.facade.callback.InterceptorCallback
 import com.alibaba.android.arouter.facade.template.IInterceptor
 import com.dylanc.arouter.KEY_ROUTER_PATH
-import com.dylanc.arouter.core.loginActivityPath
-import com.dylanc.arouter.core.requireLoginPaths
 import com.dylanc.arouter.startRouterActivity
 
 /**
@@ -30,7 +28,8 @@ class LoginInterceptor : IInterceptor {
 
   companion object {
     internal var checkLogin: (() -> Boolean)? = null
-//    private var interceptedPaths: List<String>? = null
+    internal var loginActivityPath: String? = null
+    internal val requireLoginPaths = arrayListOf<String>()
 
     fun enable(onCheckLogin: () -> Boolean) {
       checkLogin = onCheckLogin

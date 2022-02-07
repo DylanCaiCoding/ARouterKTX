@@ -11,8 +11,8 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.alibaba.android.arouter.utils.ClassUtils
 import com.alibaba.android.arouter.utils.Consts
 import com.alibaba.android.arouter.utils.PackageUtils
-import com.dylanc.arouter.core.loginActivityPath
-import com.dylanc.arouter.core.requireLoginPaths
+import com.dylanc.arouter.interceptor.LoginInterceptor.Companion.loginActivityPath
+import com.dylanc.arouter.interceptor.LoginInterceptor.Companion.requireLoginPaths
 import com.dylanc.arouter.template.IRoutePaths
 import java.util.HashSet
 

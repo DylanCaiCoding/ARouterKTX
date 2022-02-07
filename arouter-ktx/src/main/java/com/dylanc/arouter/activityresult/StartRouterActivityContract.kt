@@ -9,8 +9,9 @@ import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.os.bundleOf
-import com.dylanc.arouter.core.getActivityClass
-import com.dylanc.arouter.core.routes
+import com.alibaba.android.arouter.core.LogisticsCenter
+import com.alibaba.android.arouter.facade.enums.RouteType
+import com.alibaba.android.arouter.launcher.ARouter
 
 fun ActivityResultCaller.startRouterActivityLauncher(block: (ActivityResult) -> Unit) =
   registerForActivityResult(StartRouterActivityContract(), block)
@@ -28,8 +29,14 @@ data class RouterRequest(
 
 class StartRouterActivityContract : ActivityResultContract<RouterRequest, ActivityResult>() {
 
-  override fun createIntent(context: Context, input: RouterRequest) =
-    input.intent.setClass(context, routes.getActivityClass(input.path))
+  override fun createIntent(context: Context, input: RouterRequest):Intent {
+    val postcard = ARouter.getInstance().build(input.path)
+    LogisticsCenter.completion(postcard)
+    if (postcard.type != RouteType.ACTIVITY) {
+      throw IllegalArgumentException("The routing class for the path is not an activity type.")
+    }
+    return input.intent.setClass(context, postcard.destination)
+  }
 
   override fun parseResult(resultCode: Int, intent: Intent?) = ActivityResult(resultCode, intent)
 }
