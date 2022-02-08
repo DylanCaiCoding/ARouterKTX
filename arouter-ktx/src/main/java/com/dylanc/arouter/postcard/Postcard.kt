@@ -58,6 +58,7 @@ fun Postcard.navigation(fragment: Fragment, requestCode: Int, callback: Navigati
     }
     return null
   }
+
   callback?.onFound(this)
 
   val interceptorService = ARouter.getInstance().build("/arouter/service/interceptor").navigation() as InterceptorService
@@ -69,7 +70,7 @@ fun Postcard.navigation(fragment: Fragment, requestCode: Int, callback: Navigati
        * @param postcard route meta
        */
       override fun onContinue(postcard: Postcard) {
-        _navigation(fragment, postcard, requestCode, callback)
+        postcard._navigation(fragment, requestCode, callback)
       }
 
       /**
@@ -83,22 +84,22 @@ fun Postcard.navigation(fragment: Fragment, requestCode: Int, callback: Navigati
       }
     })
   } else {
-    return _navigation(fragment, this, requestCode, callback)
+    return _navigation(fragment, requestCode, callback)
   }
   return null
 }
 
 @Suppress("FunctionName", "DEPRECATION")
-private fun Postcard._navigation(fragment: Fragment, postcard: Postcard, requestCode: Int, callback: NavigationCallback?): Any? {
-  val currentContext = postcard.context
-  when (postcard.type) {
+private fun Postcard._navigation(fragment: Fragment, requestCode: Int, callback: NavigationCallback?): Any? {
+  val currentContext = fragment.requireContext()
+  when (type) {
     RouteType.ACTIVITY -> {
       // Build intent
-      val intent = Intent(currentContext, postcard.destination)
-      intent.putExtras(postcard.extras)
+      val intent = Intent(currentContext, destination)
+      intent.putExtras(extras)
 
       // Set flags.
-      val flags = postcard.flags
+      val flags = flags
       if (0 != flags) {
         intent.flags = flags
       }
@@ -109,7 +110,7 @@ private fun Postcard._navigation(fragment: Fragment, postcard: Postcard, request
       }
 
       // Set Actions
-      val action = postcard.action
+      val action = action
       if (!TextUtils.isEmpty(action)) {
         intent.action = action
       }
@@ -117,30 +118,30 @@ private fun Postcard._navigation(fragment: Fragment, postcard: Postcard, request
       fragment.requireActivity().runOnUiThread {
         if (requestCode >= 0) {  // Need start for result
           if (currentContext is Activity) {
-            fragment.startActivityForResult(intent, requestCode, postcard.optionsBundle)
+            fragment.startActivityForResult(intent, requestCode, optionsBundle)
           } else {
             ARouter.logger.warning(Consts.TAG, "Must use [navigation(activity, ...)] to support [startActivityForResult]")
           }
         } else {
-          ActivityCompat.startActivity(currentContext, intent, postcard.optionsBundle)
+          ActivityCompat.startActivity(currentContext, intent, optionsBundle)
         }
 
-        if (-1 != postcard.enterAnim && -1 != postcard.exitAnim && currentContext is Activity) {    // Old version.
-          currentContext.overridePendingTransition(postcard.enterAnim, postcard.exitAnim)
+        if (-1 != enterAnim && -1 != exitAnim && currentContext is Activity) {    // Old version.
+          currentContext.overridePendingTransition(enterAnim, exitAnim)
         }
 
-        callback?.onArrival(postcard)
+        callback?.onArrival(this)
       }
     }
-    RouteType.PROVIDER -> return postcard.provider
+    RouteType.PROVIDER -> return provider
     RouteType.BOARDCAST, RouteType.CONTENT_PROVIDER, RouteType.FRAGMENT -> {
-      val fragmentMeta = postcard.destination
+      val fragmentMeta = destination
       try {
         val instance = fragmentMeta.getConstructor().newInstance()
         if (instance is android.app.Fragment) {
-          instance.arguments = postcard.extras
+          instance.arguments = extras
         } else if (instance is Fragment) {
-          instance.arguments = postcard.extras
+          instance.arguments = extras
         }
         return instance
       } catch (ex: java.lang.Exception) {
