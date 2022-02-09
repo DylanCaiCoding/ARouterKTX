@@ -12,5 +12,4 @@ const val BASE_URL = "https://fastmock.site/"
 
 const val GROUP_APP = "/app"
 
-@RequireLoginPath
 const val PATH_MAIN = "$GROUP_APP/main"

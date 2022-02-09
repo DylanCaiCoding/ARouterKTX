@@ -2,7 +2,7 @@ package com.dylanc.arouter.sample
 
 import android.app.Application
 import com.dylanc.arouter.interceptor.LoginInterceptor
-import com.dylanc.arouter.safeRouterServices
+import com.dylanc.arouter.routerServices
 import com.dylanc.arouter.sample.user.service.UserService
 
 /**
@@ -11,10 +11,10 @@ import com.dylanc.arouter.sample.user.service.UserService
 @Suppress("unused")
 class App : Application() {
 
-  private val userService: UserService by safeRouterServices()
+  private val userService: UserService? by routerServices()
 
   override fun onCreate() {
     super.onCreate()
-    LoginInterceptor.enable { userService.isLogin() }
+    LoginInterceptor.enable { userService?.isLogin() == true }
   }
 }
