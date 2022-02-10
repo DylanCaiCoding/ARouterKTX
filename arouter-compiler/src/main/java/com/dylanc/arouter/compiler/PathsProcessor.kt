@@ -58,15 +58,6 @@ class PathsProcessor : AbstractProcessor() {
       .addSuperinterface(ClassName.get(typeIRoutePaths))
       .addModifiers(Modifier.PUBLIC)
       .addMethod(loadIntoMethodBuilder.build())
-//      .addField(FieldSpec.builder(arrayListType, "requireLoginPaths", Modifier.PUBLIC).build())
-//      .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
-//        .apply {
-//          addStatement("requireLoginPaths = new ArrayList<>()")
-//          checkLoginPathElements.forEach { element ->
-//            addStatement("requireLoginPaths.add(${element.fullClassName}.${element.simpleName})")
-//          }
-//        }
-//        .build())
       .build()
 
     try {
