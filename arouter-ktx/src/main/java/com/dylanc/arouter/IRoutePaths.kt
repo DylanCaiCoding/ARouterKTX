@@ -1,4 +1,4 @@
-package com.dylanc.arouter.template
+package com.dylanc.arouter
 
 /**
  * @author Dylan Cai

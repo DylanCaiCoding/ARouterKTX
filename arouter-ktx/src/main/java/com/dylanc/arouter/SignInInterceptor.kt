@@ -1,22 +1,20 @@
-package com.dylanc.arouter.interceptor
+package com.dylanc.arouter
 
 import android.content.Context
 import com.alibaba.android.arouter.facade.Postcard
 import com.alibaba.android.arouter.facade.annotation.Interceptor
 import com.alibaba.android.arouter.facade.callback.InterceptorCallback
 import com.alibaba.android.arouter.facade.template.IInterceptor
-import com.dylanc.arouter.KEY_ROUTER_PATH
-import com.dylanc.arouter.startRouterActivity
 
 /**
  * @author Dylan Cai
  */
 @Interceptor(priority = Int.MAX_VALUE)
-class LoginInterceptor : IInterceptor {
+class SignInInterceptor : IInterceptor {
 
   override fun process(postcard: Postcard, callback: InterceptorCallback) {
     if (isInterceptPath(postcard.path)) {
-      startRouterActivity(loginActivityPath!!, KEY_ROUTER_PATH to postcard.path) {
+      startActivityByRouter(SignInActivityPath!!, KEY_ROUTER_PATH to postcard.path) {
         onArrival { callback.onInterrupt(null) }
       }
     } else {
@@ -27,16 +25,16 @@ class LoginInterceptor : IInterceptor {
   override fun init(context: Context) = Unit
 
   companion object {
-    internal var checkLogin: (() -> Boolean)? = null
-    internal var loginActivityPath: String? = null
-    internal val requireLoginPaths = arrayListOf<String>()
+    internal var checkSignIn: (() -> Boolean)? = null
+    internal var SignInActivityPath: String? = null
+    internal val requireSignInPaths = arrayListOf<String>()
 
-    fun enable(onCheckLogin: () -> Boolean) {
-      checkLogin = onCheckLogin
+    fun enable(onCheckSignIn: () -> Boolean) {
+      checkSignIn = onCheckSignIn
     }
 
     internal fun isInterceptPath(path: String) =
-      loginActivityPath != null && path != loginActivityPath &&
-          requireLoginPaths.contains(path) && checkLogin?.invoke() == false
+      SignInActivityPath != null && path != SignInActivityPath &&
+          requireSignInPaths.contains(path) && checkSignIn?.invoke() == false
   }
 }

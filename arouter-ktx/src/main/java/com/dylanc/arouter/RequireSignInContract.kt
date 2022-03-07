@@ -1,4 +1,4 @@
-package com.dylanc.arouter.activityresult
+package com.dylanc.arouter
 
 import android.app.Activity
 import android.content.Context
@@ -8,19 +8,20 @@ import androidx.activity.result.contract.ActivityResultContract
 import com.alibaba.android.arouter.core.LogisticsCenter
 import com.alibaba.android.arouter.facade.enums.RouteType
 import com.alibaba.android.arouter.launcher.ARouter
-import com.dylanc.arouter.interceptor.LoginInterceptor
-import com.dylanc.arouter.interceptor.LoginInterceptor.Companion.loginActivityPath
+import com.dylanc.arouter.SignInInterceptor.Companion.SignInActivityPath
 
-fun ActivityResultCaller.requireLoginLauncher(block: (Boolean) -> Unit) =
-  registerForActivityResult(RequireLoginContract(), block)
+fun ActivityResultCaller.requireLoginLauncher(onLoginFailure: (() -> Unit)? = null, onLoginSuccess: () -> Unit) =
+  registerForActivityResult(RequireSignInContract()) {
+    if (it) onLoginSuccess() else onLoginFailure?.invoke()
+  }
 
-class RequireLoginContract : ActivityResultContract<Unit, Boolean>() {
+class RequireSignInContract : ActivityResultContract<Unit, Boolean>() {
 
   override fun createIntent(context: Context, input: Unit?): Intent {
-    val postcard = ARouter.getInstance().build(loginActivityPath!!)
+    val postcard = ARouter.getInstance().build(SignInActivityPath!!)
     LogisticsCenter.completion(postcard)
     if (postcard.type != RouteType.ACTIVITY) {
-      throw IllegalArgumentException("The routing class for the path is not an activity type.")
+      throw IllegalArgumentException("The routing class for the path of $SignInActivityPath is not an activity type.")
     }
     return Intent(context, postcard.destination)
   }
@@ -29,8 +30,8 @@ class RequireLoginContract : ActivityResultContract<Unit, Boolean>() {
 
   override fun getSynchronousResult(context: Context, input: Unit?): SynchronousResult<Boolean>? =
     when {
-      LoginInterceptor.checkLogin?.invoke() == true -> SynchronousResult(true)
-      loginActivityPath == null -> SynchronousResult(false)
+      SignInActivityPath == null -> SynchronousResult(true)
+      SignInInterceptor.checkSignIn?.invoke() == true -> SynchronousResult(true)
       else -> null
     }
 }
