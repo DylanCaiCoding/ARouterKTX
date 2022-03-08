@@ -11,4 +11,4 @@ const val SEPARATOR = "$$"
 
 const val KEY_MODULE_NAME = "AROUTER_MODULE_NAME"
 
-const val IROUTE_PATHS = "com.dylanc.arouter.template.IRoutePaths"
+const val IROUTE_PATHS = "com.dylanc.arouter.IRoutePaths"
