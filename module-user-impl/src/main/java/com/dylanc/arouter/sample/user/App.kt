@@ -1,7 +1,7 @@
 package com.dylanc.arouter.sample.user
 
 import android.app.Application
-import com.dylanc.arouter.interceptor.LoginInterceptor
+import com.dylanc.arouter.SignInInterceptor
 import com.dylanc.arouter.routerServices
 import com.dylanc.arouter.sample.user.service.UserService
 import com.dylanc.retrofit.initRetrofit
@@ -16,7 +16,7 @@ class App : Application() {
 
   override fun onCreate() {
     super.onCreate()
-    LoginInterceptor.enable { userService?.isLogin() == true }
+    SignInInterceptor.enable { userService?.isLogin() == true }
 
     initRetrofit {
       baseUrl("https://fastmock.site/")
