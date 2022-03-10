@@ -1,2 +1,5 @@
 com.dylanc.arouter.compiler.PathsProcessor
 com.dylanc.arouter.compiler.LoginInfoProcessor
+com.alibaba.android.arouter.compiler.processor.RouteProcessor,aggregating
+com.alibaba.android.arouter.compiler.processor.AutowiredProcessor,aggregating
+com.alibaba.android.arouter.compiler.processor.InterceptorProcessor,aggregating

@@ -74,7 +74,7 @@ kapt {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':module-user-api')
-    kapt "com.alibaba:arouter-compiler:$arouter_compiler_version"
+    kapt project(path: ':arouter-compiler')
 
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test:runner:$runner_version"
